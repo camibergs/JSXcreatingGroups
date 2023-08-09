@@ -1,0 +1,17 @@
+header {
+    padding: 10px;
+    background: rgb(70, 85, 133);
+
+    h1 { color: white; }
+    p.welcome { color: rgb(255, 255, 255); }
+
+    div.navHeaderItem {
+        color: rgb(36, 36, 40);
+        padding: 10px;
+        
+
+        &:hover {
+            color: rgb(255, 255, 255);
+        }
+    }
+}
