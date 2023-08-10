@@ -10,8 +10,11 @@ import PageNotFound from './components/views/404.jsx';
 
 function App() {
   // Initialisation ---------------------------
+  
   // State ------------------------------------
+
   // Handlers ---------------------------------
+
   // View -------------------------------------
   return (
     <BrowserRouter>

@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import Layout from '../../components/layout/Layout.jsx';
 import Header from '../../components/layout/Header.jsx';
 import StudentNavbar from '../../components/layout/StudentNavbar.jsx';
 import Action from '../UI/Actions.jsx';
@@ -7,58 +6,64 @@ import { CardContainer } from '../UI/Card.jsx';
 import UserCard from '../entity/user/UserCard';
 import FavouriteButtons from '../entity/favourites/FavouriteButtons.jsx';
 import './Students.scss';
+import ColourIndicator from '../UI/ColourIndicator.jsx';
+import Searchbar from '../UI/Searchbar.jsx';
+import FilterButtons from '../UI/FilterButton.jsx';
 
 
 function Students() {
 
     // Initialisation ---------------------------
-    const newStudent = {
-      UserFirstname: 'Nathan',
-      UserLastname: 'Olsson',
-      UserEmail: 'K9999999@kingston.ac.uk',
-      UserRegistered: 0,
-      UserLevel: 4,
-      UserYearID: 1,
-      UserUsertypeID: 2,
-      UserImageURL:
-        'https://images.generated.photos/m8Sph5rhjkIsOiVIp4zbvIuFl43F6BWIwhkkY86z2Ms/rs:fit:256:256/czM6Ly9pY29uczgu/Z3Bob3Rvcy1wcm9k/LnBob3Rvcy92M18w/ODU4MTE5LmpwZw.jpg',
-      UserUsertypeName: 'Student',
-      UserYearName: '2022-23',
-    };
-
     const loggedInUser = 277;
-    const apiURL = "http://softwarehub.uk/unibase/api"
+    //const apiURL = "http://softwarehub.uk/unibase/api"
+    const apiURL = 'http://10.130.41.146:5000/api';
     const myGroupEndpoint = `${apiURL}/users/likes/${loggedInUser}`;
 
     // State ------------------------------------
     const [students, setStudents] = useState(null);
+    const [filteredStudents, setFilteredStudents] = useState(null);
   
     const apiGet = async (endpoint) => {
       const response = await fetch(endpoint);
-      const result = await response.json();
-      const newResult = result.map((user) => {
-        return {
-          ...user, UserAffinityID: Math.random() > 0.9 ? 1 : Math.random() > 0.9 ? 2 : 0
-        }
-      });
-      setStudents(newResult);
-    };
+      const data = await response.json();
+      setStudents(data);
+      setFilteredStudents(data); // Initialize filtered students with all students
+  };
 
     useEffect(() => {
       apiGet(myGroupEndpoint);
     }, [myGroupEndpoint]);
 
     // Handlers ---------------------------------
-    const addToFavourites = (id) => {
-            alert("Student has been added to Favourites");
+    function searchbar(search) {
+      if (search === "") {
+        setFilteredStudents(students);
+      } else {
+        const filteredStudents = students.filter((student) => {
+          return student.name.toLowerCase().includes(search.toLowerCase());
+        });
+        setFilteredStudents(filteredStudents);
+        console.log(filteredStudents);
+      }
+    }
+    
+    
+    const filterStudents = (filterType) => {
+      if (filterType === "Liked") {
+        const likedStudents = students.filter(
+          (student) => student.UserLikeAffinityID === 1
+        );
+        setFilteredStudents(likedStudents);
+      } else if (filterType === "Disliked") {
+        const dislikedStudents = students.filter(
+          (student) => student.UserLikeAffinityID === 2
+        );
+        setFilteredStudents(dislikedStudents);
+      } else {
+        // "All" filter or no filter selected, show all students
+        setFilteredStudents(students);
+      }
     };
-
-    const handleAdd = (student) => {
-      student.UserID = Math.floor(10000 * Math.random());
-      setStudents([...students, student]);
-      console.log(`Length of students: ${students.length}`);
-    };
-
 
     // View -------------------------------------
     return (
@@ -68,27 +73,32 @@ function Students() {
       <div className='studentPage' >
         <h1>Students in your course</h1>
 
+        <Searchbar className="searchbar" searchbar={searchbar} />
+        <FilterButtons onFilterChange={filterStudents} />
+      
         <CardContainer>
           {!students ? (
             <p>Loading records ...</p>
           ) : students.length === 0 ? (
             <p>No records found.</p>
           ) : (
-            students.map((student) => 
-              <UserCard user={student} key={student.UserID}>
-                <FavouriteButtons user={student}/>
-              </UserCard>
+            filteredStudents.map((student, index) => (
+              <ColourIndicator
+                affinityID={student.UserLikeAffinityID}
+                key={student.UserID}
+                >
+                <UserCard user={student} key={student.UserID}>
+                  <FavouriteButtons user={student} index={index} get={apiGet} />
+                </UserCard> 
+              </ColourIndicator>
+            )
         ))}
         </CardContainer>
 
-        <button onClick={() =>
-            addToFavourites(student.UserID)}> 
-            <span>Add to Favourite</span>
-        </button> 
-        <button onClick={() => handleAdd(newStudent)}>Add student</button>
       </div>
       </>
 );
 }
+
 
 export default Students;

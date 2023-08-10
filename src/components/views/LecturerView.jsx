@@ -10,7 +10,9 @@ import './LecturerView.scss';
 function LecturerView() {
   // Initialisation ------------------------------
   const loggedInLecturer = 820;
-  const apiURL = 'http://softwarehub.uk/unibase/api';
+  // const apiURL = 'http://softwarehub.uk/unibase/api';
+  const apiURL = 'http://10.130.41.146:5000/api';
+
   const myModulesEndpoint = `${apiURL}/assessments/leader/${loggedInLecturer}`;
 
   // State ---------------------------------------
@@ -51,7 +53,7 @@ function LecturerView() {
         {showForm && <AssessmentForm onCancel={handleCancel} onSuccess={handleSuccess}/>}
 
         {!assessments ? (
-          <p>Loading records ... </p>
+          <p>Loading assessments </p>
         ) : assessments.length === 0 ? (
           <p>No records found</p>
         ) : (

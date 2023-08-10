@@ -38,7 +38,27 @@ div.card {
         box-shadow: 1px 1px 2px 1px rgba(70,70,70,0.3);
 
     }    
-
- 
  }
+}
+
+.red-border {
+  border-color: red;
+  border-width: 10px;
+}
+
+.green-border {
+  border-color: green;
+  border-width: 10px;
+}
+
+.grey-border {
+  border-color: rgb(94, 94, 94);
+  border-width: 10px;
+}
+
+.searchbar {
+  border: 1px solid rgb(255, 61, 61);
+  border-radius: 6px;
+  display: flex;
+  justify-content: center;
 }

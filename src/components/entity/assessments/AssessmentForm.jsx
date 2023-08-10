@@ -7,12 +7,12 @@ import DatetimePicker from '../../UI/DatetimePicker.jsx';
 const initialAssessment = {
   AssessmentName: '',
   AssessmentPercentage: '',
-  AssessmentPublishdate: '',
-  AssessmentSubmissiondate: '',
-  AssessmentFeedbackdate: '',
+  AssessmentPublishdate: new Date(),
+  AssessmentSubmissiondate: null,
+  AssessmentFeedbackdate: null,
   AssessmentBriefURL: '',
-  AssessmentModuleID: '',
-  AssessmentAssessmenttypeID: '',
+  AssessmentModuleID: null,
+  AssessmentAssessmenttypeID: null,
   AssessmentModuleName: '',
   AssessmentAssessmenttypeDescription: '',
   
@@ -24,7 +24,7 @@ function AssessmentForm({ onCancel, onSuccess }) {
     html2js: {
       AssessmentName: (value) => (value === '' ? null : value),
       AssessmentPercentage: (value) => (value === '' ? null : value),
-      AssessmentPublishdate: (value) => (value === '' ? null : value),
+      AssessmentPublishdate: (date) => new Date(date),
       AssessmentSubmissiondate: (value) => (value === '' ? null : value),
       AssessmentFeedbackdate: (value) => (value === '' ? null : value),
       AssessmentBriefURL: (value) => (value === '' ? null : value),
@@ -36,7 +36,7 @@ function AssessmentForm({ onCancel, onSuccess }) {
     js2html: {
       AssessmentName: (value) => (value === '' ? null : value),
       AssessmentPercentage: (value) => (value === '' ? null : value),
-      AssessmentPublishdate: (value) => (value === '' ? null : value),
+      AssessmentPublishdate: (date) => date.toISOString().slice(0,10),
       AssessmentSubmissiondate: (value) => (value === '' ? null : value),
       AssessmentFeedbackdate: (value) => (value === '' ? null : value),
       AssessmentBriefURL: (value) => (value === '' ? null : value),
@@ -49,7 +49,8 @@ function AssessmentForm({ onCancel, onSuccess }) {
   };
 
   const loggedInLecturer = 820;
-  const apiURL = 'http://softwarehub.uk/unibase/api';
+  //const apiURL = "http://softwarehub.uk/unibase/api"
+  const apiURL = 'http://10.130.41.146:5000/api';
   const postAssessmentEndpoint = `${apiURL}/assessments`;
   const moduleEndpoint = `${apiURL}/modules`;
   const assessmentTypeDescrEndpoint = `${apiURL}/assessments/leader/${loggedInLecturer}`;
